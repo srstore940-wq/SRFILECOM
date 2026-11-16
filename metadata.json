@@ -1,0 +1,6 @@
+{
+  "name": "PureCompress",
+  "description": "100% offline, lossless and crystal-clear one-click file compressor and editor for PDF, JPG, PNG, and common formats.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
