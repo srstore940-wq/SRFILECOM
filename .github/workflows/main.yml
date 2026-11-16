@@ -1,31 +1,46 @@
-yaml
-name: Android Build
+name: Android CI Build
 
 on:
   push:
+    branches: [ "main", "master" ]
+  pull_request:
     branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: set up JDK 17
+    steps:
+      # 1. Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Set up JDK (Java 17 is standard for modern Android Gradle Plugins)
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: gradle
 
+      # 3. Cache Gradle dependencies to speed up future builds
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      # 4. Make gradlew executable
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # 5. Run Unit Tests
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+
+      # 6. Build Debug APK
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Upload APK
+      # 7. Upload the generated APK as a downloadable artifact
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-      name: app-debug
+          name: app-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
